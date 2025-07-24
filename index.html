@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ItselfeyShop</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@7.22.10/babel.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div id="root"></div>
-    <script type="text/babel">
+    <script>
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+
         function ItselfeyShop() {
-            const [cart, setCart] = React.useState([]);
-            const [showCart, setShowCart] = React.useState(false);
+            const [cart, setCart] = useState([]);
+            const [showCart, setShowCart] = useState(false);
 
             const products = [
                 { id: 1, name: "Galaxy Socks", price: 9.99, description: "Socks that make your feet feel out-of-this-world!" },
@@ -126,13 +128,14 @@
                         </div>
                     )}
                     <footer className="mt-6 text-center text-gray-500">
-                        <p>&copy; 2025 ItselfeyShop. Absolutely no refunds, because why would you return this stuff?</p>
+                        <p>© 2025 ItselfeyShop. Absolutely no refunds, because why would you return this stuff?</p>
                     </footer>
                 </div>
             );
         }
 
-        ReactDOM.render(<ItselfeyShop />, document.getElementById('root'));
+        const root = createRoot(document.getElementById('root'));
+        root.render(<ItselfeyShop />);
     </script>
 </body>
 </html>
