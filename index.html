@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ItselfeyShop</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@7.22.10/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="root"></div>
+    <script type="text/babel">
+        function ItselfeyShop() {
+            const [cart, setCart] = React.useState([]);
+            const [showCart, setShowCart] = React.useState(false);
+
+            const products = [
+                { id: 1, name: "Galaxy Socks", price: 9.99, description: "Socks that make your feet feel out-of-this-world!" },
+                { id: 2, name: "Unicorn Mug", price: 14.99, description: "Drink your coffee with magical vibes!" },
+                { id: 3, name: "Glow-in-the-Dark Pen", price: 4.99, description: "Write your dreams in neon glory!" },
+                { id: 4, name: "Mystic Candle", price: 19.99, description: "Light up your room with cosmic scents!" }
+            ];
+
+            const addToCart = (product) => {
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) {
+                    setCart(cart.map(item =>
+                        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    ));
+                } else {
+                    setCart([...cart, { ...product, quantity: 1 }]);
+                }
+            };
+
+            const removeFromCart = (id) => {
+                setCart(cart.filter(item => item.id !== id));
+            };
+
+            const updateQuantity = (id, quantity) => {
+                if (quantity < 1) return removeFromCart(id);
+                setCart(cart.map(item =>
+                    item.id === id ? { ...item, quantity: parseInt(quantity) } : item
+                ));
+            };
+
+            const getTotal = () => {
+                return cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+            };
+
+            const checkout = () => {
+                alert("Thank you for shopping at ItselfeyShop! (This is a demo, no real checkout.)");
+                setCart([]);
+                setShowCart(false);
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-4">
+                    <header className="bg-purple-600 text-white p-4 rounded-lg shadow mb-6">
+                        <h1 className="text-3xl font-bold text-center">ItselfeyShop</h1>
+                        <button
+                            onClick={() => setShowCart(!showCart)}
+                            className="absolute top-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded-full hover:bg-yellow-500"
+                        >
+                            Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)})
+                        </button>
+                    </header>
+
+                    {showCart ? (
+                        <div className="bg-white p-6 rounded-lg shadow">
+                            <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
+                            {cart.length === 0 ? (
+                                <p className="text-gray-500">Your cart is empty.</p>
+                            ) : (
+                                <div>
+                                    {cart.map(item => (
+                                        <div key={item.id} className="flex justify-between items-center p-2 border-b">
+                                            <div>
+                                                <h3 className="font-medium">{item.name}</h3>
+                                                <p className="text-sm text-gray-500">${item.price} x 
+                                                    <input
+                                                        type="number"
+                                                        value={item.quantity}
+                                                        onChange={(e) => updateQuantity(item.id, e.target.value)}
+                                                        min="1"
+                                                        className="w-12 mx-2 p-1 border rounded"
+                                                    />
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => removeFromCart(item.id)}
+                                                className="text-red-500 hover:text-red-700"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <div className="mt-4 text-right">
+                                        <p className="text-lg font-semibold">Total: ${getTotal()}</p>
+                                        <button
+                                            onClick={checkout}
+                                            className="mt-2 bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
+                                        >
+                                            Checkout
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {products.map(product => (
+                                <div key={product.id} className="bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                                    <h3 className="text-lg font-semibold">{product.name}</h3>
+                                    <p className="text-gray-500">{product.description}</p>
+                                    <p className="text-lg font-bold mt-2">${product.price}</p>
+                                    <button
+                                        onClick={() => addToCart(product)}
+                                        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
+                                    >
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <footer className="mt-6 text-center text-gray-500">
+                        <p>&copy; 2025 ItselfeyShop. Absolutely no refunds, because why would you return this stuff?</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ItselfeyShop />, document.getElementById('root'));
+    </script>
+</body>
+</html>
